@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Test Diagnóstico – Base de Datos II</title>
+<style>
+  :root{
+    --ink:#1c2b2d;
+    --paper:#f6f3ec;
+    --line:#d8cfc0;
+    --signal:#2f6f5e;
+    --signal-dim:#e4efe9;
+    --warn:#a4432f;
+    --warn-dim:#f6e5e0;
+    --muted:#6f6a5e;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Georgia','Iowan Old Style',serif;
+    line-height:1.5;
+    padding:0 0 80px;
+  }
+  .wrap{max-width:720px;margin:0 auto;padding:40px 24px;}
+  header{border-bottom:3px solid var(--ink);padding-bottom:20px;margin-bottom:32px;}
+  .eyebrow{
+    font-family:'Helvetica Neue',Arial,sans-serif;
+    text-transform:uppercase;
+    letter-spacing:.14em;
+    font-size:12px;
+    color:var(--signal);
+    font-weight:700;
+    margin-bottom:8px;
+  }
+  h1{font-size:32px;margin:0 0 10px;letter-spacing:-0.01em;}
+  .sub{color:var(--muted);font-size:15px;font-family:'Helvetica Neue',Arial,sans-serif;}
+
+  #progress-bar{
+    position:sticky;top:0;background:var(--paper);padding:14px 0 10px;z-index:5;
+    border-bottom:1px solid var(--line);
+  }
+  .progress-track{height:6px;background:var(--line);border-radius:3px;overflow:hidden;}
+  .progress-fill{height:100%;background:var(--signal);width:0%;transition:width .3s ease;}
+  .progress-label{
+    font-family:'Helvetica Neue',Arial,sans-serif;font-size:12px;color:var(--muted);
+    margin-top:6px;letter-spacing:.04em;
+  }
+
+  .q{
+    border-bottom:1px solid var(--line);
+    padding:28px 0;
+  }
+  .q:first-of-type{padding-top:32px;}
+  .q-unit{
+    font-family:'Helvetica Neue',Arial,sans-serif;
+    font-size:11px;text-transform:uppercase;letter-spacing:.12em;
+    color:var(--signal);font-weight:700;margin-bottom:6px;
+  }
+  .q-title{font-size:19px;margin:0 0 16px;}
+  .options{display:flex;flex-direction:column;gap:10px;}
+  .opt{
+    display:flex;align-items:flex-start;gap:12px;
+    border:1.5px solid var(--line);
+    border-radius:8px;
+    padding:12px 14px;
+    cursor:pointer;
+    font-family:'Helvetica Neue',Arial,sans-serif;
+    font-size:15px;
+    background:#fff;
+    transition:border-color .15s, background .15s;
+  }
+  .opt:hover{border-color:var(--signal);}
+  .opt input{margin-top:3px;accent-color:var(--signal);flex-shrink:0;}
+  .opt.selected{border-color:var(--signal);background:var(--signal-dim);}
+  .opt.correct{border-color:var(--signal);background:var(--signal-dim);}
+  .opt.incorrect{border-color:var(--warn);background:var(--warn-dim);}
+
+  #submit-btn, #retry-btn{
+    font-family:'Helvetica Neue',Arial,sans-serif;
+    font-weight:700;
+    font-size:15px;
+    background:var(--ink);
+    color:var(--paper);
+    border:none;
+    border-radius:8px;
+    padding:16px 28px;
+    cursor:pointer;
+    width:100%;
+    margin-top:24px;
+    letter-spacing:.02em;
+  }
+  #submit-btn:hover, #retry-btn:hover{background:var(--signal);}
+  #submit-btn:disabled{background:var(--line);color:var(--muted);cursor:not-allowed;}
+
+  #results{display:none;}
+  .score-hero{
+    text-align:center;
+    padding:36px 20px;
+    border:3px solid var(--ink);
+    border-radius:12px;
+    margin-bottom:28px;
+    background:#fff;
+  }
+  .score-num{font-size:56px;font-weight:700;line-height:1;}
+  .score-level{
+    font-family:'Helvetica Neue',Arial,sans-serif;
+    text-transform:uppercase;letter-spacing:.1em;font-size:13px;
+    color:var(--signal);font-weight:700;margin-top:10px;
+  }
+  .score-desc{font-family:'Helvetica Neue',Arial,sans-serif;color:var(--muted);font-size:14px;margin-top:8px;}
+
+  .breakdown{font-family:'Helvetica Neue',Arial,sans-serif;font-size:14px;}
+  .breakdown h3{font-family:Georgia,serif;font-size:17px;margin:0 0 14px;}
+  .bd-row{display:flex;align-items:center;gap:12px;margin-bottom:10px;}
+  .bd-label{flex:0 0 150px;font-size:13px;color:var(--muted);}
+  .bd-track{flex:1;height:8px;background:var(--line);border-radius:4px;overflow:hidden;}
+  .bd-fill{height:100%;background:var(--signal);}
+  .bd-score{flex:0 0 34px;text-align:right;font-size:13px;font-weight:700;}
+
+  #quiz-form{display:block;}
+
+  .send-status{
+    font-family:'Helvetica Neue',Arial,sans-serif;
+    font-size:13px;
+    color:var(--muted);
+    text-align:center;
+    margin-top:14px;
+  }
+  .send-status.ok{color:var(--signal);}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Base de Datos II · Uninorte</div>
+    <h1>Test Diagnóstico</h1>
+    <div class="sub">24 preguntas de opción múltiple. Elegí la respuesta que consideres correcta en cada una — no hay penalización por intentarlo, esto es solo para conocer tu punto de partida. Tu resultado es completamente anónimo.</div>
+  </header>
+
+  <div id="progress-bar">
+    <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+    <div class="progress-label" id="progress-label">0 de 24 respondidas</div>
+  </div>
+
+  <form id="quiz-form"></form>
+  <button id="submit-btn" disabled>Responder para continuar</button>
+
+  <div id="results">
+    <div class="score-hero">
+      <div class="score-num" id="score-num">0/24</div>
+      <div class="score-level" id="score-level"></div>
+      <div class="score-desc" id="score-desc"></div>
+    </div>
+    <div class="breakdown">
+      <h3>Resultado por unidad</h3>
+      <div id="breakdown-rows"></div>
+    </div>
+    <div class="send-status" id="send-status"></div>
+    <button id="retry-btn">Volver a intentar</button>
+  </div>
+</div>
+
+<script>
+// Pegá acá la URL de tu Google Apps Script publicado (ver instrucciones del README).
+// Mientras diga "PEGAR_URL_AQUI", los resultados NO se envían a ningún lado, solo se muestran en pantalla.
+const SHEET_ENDPOINT = "PEGAR_URL_AQUI";
+
+const QUESTIONS = [
+  // Unidad 01: Modelos de Base de Datos Convencionales
+  {
+    unit: "Unidad 01 · BD Convencionales",
+    q: "¿Qué representa principalmente un diagrama entidad-relación (DER)?",
+    options: [
+      "El código SQL final de la base de datos",
+      "Las entidades del dominio, sus atributos y las relaciones entre ellas",
+      "La configuración física del servidor de base de datos",
+      "El plan de copias de seguridad de la base de datos"
+    ],
+    correct: 1
+  },
+  {
+    unit: "Unidad 01 · BD Convencionales",
+    q: "¿Cuál es el objetivo principal del proceso de normalización?",
+    options: [
+      "Aumentar la redundancia de datos para mayor velocidad de lectura",
+      "Reducir la redundancia y evitar anomalías de inserción, actualización y borrado",
+      "Convertir la base de datos a un modelo orientado a objetos",
+      "Eliminar todas las relaciones entre tablas"
+    ],
+    correct: 1
+  },
+  {
+    unit: "Unidad 01 · BD Convencionales",
+    q: "En el contexto de dependencias funcionales, si A determina funcionalmente a B, esto significa que:",
+    options: [
+      "A cada valor de B le corresponde un único valor de A",
+      "A cada valor de A le corresponde como máximo un único valor de B",
+      "A y B siempre deben estar en tablas separadas",
+      "B no puede depender de ningún otro atributo"
+    ],
+    correct: 1
+  },
+
+  // Unidad 02: Modelos de BD Orientados a Objetos
+  {
+    unit: "Unidad 02 · BD Orientadas a Objetos",
+    q: "¿Cuál es una diferencia clave entre la modelización orientada a objetos y la modelización relacional?",
+    options: [
+      "La orientada a objetos no permite almacenar datos, solo comportamiento",
+      "La orientada a objetos integra datos y comportamiento (métodos) en una misma unidad, mientras que la relacional se centra en tablas y datos",
+      "La relacional siempre es más rápida en cualquier escenario",
+      "No existen diferencias reales entre ambos enfoques"
+    ],
+    correct: 1
+  },
+  {
+    unit: "Unidad 02 · BD Orientadas a Objetos",
+    q: "En el paradigma orientado a objetos aplicado a bases de datos, ¿qué define principalmente una clase?",
+    options: [
+      "Una tabla sin ninguna relación con otras",
+      "Una plantilla que agrupa atributos y comportamientos comunes para un conjunto de objetos",
+      "Un índice que acelera las consultas",
+      "Un lenguaje de consulta específico"
+    ],
+    correct: 1
+  },
+  {
+    unit: "Unidad 02 · BD Orientadas a Objetos",
+    q: "Dentro de las herramientas para bases de datos orientadas a objetos, ¿qué función cumple el ODL (lenguaje de definición de datos)?",
+    options: [
+      "Permite definir la estructura y los tipos de los objetos de la base de datos",
+      "Permite exclusivamente hacer consultas de lectura",
+      "Sirve únicamente para administrar usuarios",
+      "Reemplaza por completo al modelo entidad-relación"
+    ],
+    correct: 0
+  },
+
+  // Unidad 03: Base de Datos Relacionales Extendido
+  {
+    unit: "Unidad 03 · BD Relacional Extendida",
+    q: "¿Qué herramienta se utiliza para modelar las abstracciones de diseño conceptual extendidas, como la generalización y la agregación?",
+    options: [
+      "El diagrama entidad-relación extendido (DERE)",
+      "El lenguaje XQuery",
+      "El modelo de mapeo objeto-relacional",
+      "El álgebra relacional básica"
+    ],
+    correct: 0
+  },
+  {
+    unit: "Unidad 03 · BD Relacional Extendida",
+    q: "En el modelo entidad-relación extendido, ¿qué representa la generalización?",
+    options: [
+      "La unión de varias bases de datos en una sola",
+      "Una relación jerárquica donde entidades más específicas heredan atributos de una entidad más general",
+      "La eliminación de atributos redundantes en una tabla",
+      "Un tipo de índice utilizado para optimizar consultas"
+    ],
+    correct: 1
+  },
+  {
+    unit: "Unidad 03 · BD Relacional Extendida",
+    q: "¿Qué concepto describe mejor la agregación en el diseño conceptual extendido?",
+    options: [
+      "Tratar una relación entre entidades como una entidad de orden superior, para poder relacionarla con otras entidades",
+      "Duplicar una entidad para mejorar el rendimiento",
+      "Convertir una entidad débil en una entidad fuerte",
+      "Eliminar una relación que ya no se utiliza"
+    ],
+    correct: 0
+  },
+
+  // Unidad 04: Conceptos Avanzados
+  {
+    unit: "Unidad 04 · Conceptos Avanzados",
+    q: "¿Qué diferencia principal existe entre un índice ordenado y un índice asociativo (hash)?",
+    options: [
+      "No hay ninguna diferencia entre ambos",
+      "El índice ordenado mantiene los valores en un orden secuencial (útil para búsquedas por rango); el índice asociativo usa una función hash para acceso directo por clave",
+      "El índice asociativo solo puede usarse en bases de datos orientadas a objetos",
+      "El índice ordenado no permite hacer búsquedas exactas por clave"
+    ],
+    correct: 1
+  },
+  {
+    unit: "Unidad 04 · Conceptos Avanzados",
+    q: "Al evaluar un esquema de indexación, ¿cuál de los siguientes factores es relevante a tener en cuenta según la teoría de índices?",
+    options: [
+      "Únicamente el color con que se represente el diagrama",
+      "El tiempo de acceso, el tiempo de inserción/borrado y el espacio adicional requerido por el índice",
+      "La cantidad de usuarios conectados simultáneamente a la red eléctrica",
+      "El nombre asignado a la tabla en el diccionario de datos"
+    ],
+    correct: 1
+  },
+  {
+    unit: "Unidad 04 · Conceptos Avanzados",
+    q: "¿Por qué es importante gestionar versiones y autorizaciones en un esquema de base de datos?",
+    options: [
+      "Porque permite controlar los cambios en la estructura y regular qué usuarios pueden acceder o modificar cada parte de los datos",
+      "Porque reemplaza la necesidad de hacer copias de seguridad",
+      "Porque acelera automáticamente todas las consultas SQL",
+      "Porque elimina la necesidad de definir claves primarias"
+    ],
+    correct: 0
+  },
+
+  // Unidad 05: Mapeo Objeto Relacional
+  {
+    unit: "Unidad 05 · Mapeo Objeto-Relacional",
+    q: "¿Qué problema resuelve principalmente una herramienta de mapeo objeto-relacional (ORM) como Hibernate?",
+    options: [
+      "La diferencia de representación entre el modelo orientado a objetos de una aplicación y el modelo relacional de la base de datos",
+      "La necesidad de instalar un motor de base de datos",
+      "La conversión de archivos XML a formato JSON",
+      "La creación de copias de seguridad automáticas"
+    ],
+    correct: 0
+  },
+  {
+    unit: "Unidad 05 · Mapeo Objeto-Relacional",
+    q: "¿Qué es HQL en el contexto de Hibernate?",
+    options: [
+      "Un lenguaje de consulta orientado a objetos, similar a SQL pero que trabaja sobre entidades del modelo en lugar de tablas directamente",
+      "Un protocolo de red para bases de datos distribuidas",
+      "Un formato de archivo para almacenar imágenes en la base de datos",
+      "Un tipo de índice hash exclusivo de bases de datos NoSQL"
+    ],
+    correct: 0
+  },
+  {
+    unit: "Unidad 05 · Mapeo Objeto-Relacional",
+    q: "En el mapeo objeto-relacional, ¿qué ocurre generalmente con una clase de la aplicación al mapearla a la base de datos?",
+    options: [
+      "Se descarta completamente, ya que no puede representarse en una base relacional",
+      "Se corresponde típicamente con una tabla, y sus atributos con columnas de esa tabla",
+      "Se convierte automáticamente en un documento XML",
+      "Se transforma en un índice asociativo"
+    ],
+    correct: 1
+  },
+
+  // Unidad 06: Bases de Datos XML
+  {
+    unit: "Unidad 06 · Bases de Datos XML",
+    q: "¿Para qué se utiliza principalmente el lenguaje XPath?",
+    options: [
+      "Para definir rutas de acceso y navegar por la estructura jerárquica de un documento XML",
+      "Para transformar un documento XML en una hoja de cálculo",
+      "Para cifrar el contenido de un archivo XML",
+      "Para crear índices asociativos en bases de datos relacionales"
+    ],
+    correct: 0
+  },
+  {
+    unit: "Unidad 06 · Bases de Datos XML",
+    q: "¿Qué función cumple XSLT respecto a un documento XML?",
+    options: [
+      "Permite transformar el documento XML en otro formato o estructura, aplicando hojas de estilo",
+      "Permite ejecutar consultas de agregación como si fuera SQL, sin ninguna transformación",
+      "Sirve únicamente para validar la sintaxis del XML",
+      "Convierte el XML directamente en una base de datos orientada a objetos"
+    ],
+    correct: 0
+  },
+  {
+    unit: "Unidad 06 · Bases de Datos XML",
+    q: "¿Cuál es el propósito principal de XQuery?",
+    options: [
+      "Definir la apariencia visual de un documento XML",
+      "Realizar consultas sobre datos almacenados en documentos XML",
+      "Comprimir archivos XML para reducir su tamaño",
+      "Sustituir por completo al lenguaje XPath"
+    ],
+    correct: 1
+  },
+
+  // Unidad 07: Bases de Datos NoSQL
+  {
+    unit: "Unidad 07 · Bases de Datos NoSQL",
+    q: "¿Cuál es una característica distintiva de las bases de datos NoSQL frente a las relacionales tradicionales?",
+    options: [
+      "Requieren obligatoriamente un esquema fijo y rígido antes de insertar cualquier dato",
+      "Suelen priorizar la flexibilidad de esquema y la escalabilidad horizontal por sobre las relaciones estrictas entre tablas",
+      "No permiten almacenar grandes volúmenes de datos",
+      "Solo pueden ejecutarse en un único servidor"
+    ],
+    correct: 1
+  },
+  {
+    unit: "Unidad 07 · Bases de Datos NoSQL",
+    q: "¿Qué significa que una base de datos NoSQL escale 'horizontalmente'?",
+    options: [
+      "Que se mejora el rendimiento agregando más memoria RAM a un único servidor",
+      "Que se distribuye la carga y los datos agregando más servidores o nodos a un clúster",
+      "Que se reduce la cantidad de datos almacenados para mejorar la velocidad",
+      "Que se elimina la necesidad de hacer consultas"
+    ],
+    correct: 1
+  },
+  {
+    unit: "Unidad 07 · Bases de Datos NoSQL",
+    q: "¿En qué escenario suele preferirse una base de datos NoSQL por sobre una relacional tradicional?",
+    options: [
+      "Cuando se necesita garantizar estrictamente la integridad referencial entre múltiples tablas relacionadas",
+      "Cuando se requiere manejar grandes volúmenes de datos con alta escalabilidad y esquemas flexibles o cambiantes",
+      "Cuando el volumen de datos es mínimo y no va a crecer nunca",
+      "Cuando se necesita ejecutar exclusivamente consultas SQL estándar"
+    ],
+    correct: 1
+  },
+
+  // Unidad 08: Administración de Base de Datos
+  {
+    unit: "Unidad 08 · Administración de BD",
+    q: "¿Por qué es importante asignar roles y privilegios específicos a los usuarios de una base de datos?",
+    options: [
+      "Para que todos los usuarios tengan acceso total a todas las operaciones sin restricciones",
+      "Para controlar qué acciones puede realizar cada usuario y proteger la seguridad e integridad de los datos",
+      "Para que la base de datos ocupe menos espacio en disco",
+      "Para acelerar automáticamente todas las consultas"
+    ],
+    correct: 1
+  },
+  {
+    unit: "Unidad 08 · Administración de BD",
+    q: "¿Cuál es el objetivo principal de realizar copias de seguridad periódicas de una base de datos?",
+    options: [
+      "Aumentar la velocidad de las consultas de lectura",
+      "Poder recuperar la información ante fallos, errores o pérdida de datos",
+      "Eliminar datos duplicados automáticamente",
+      "Reemplazar la necesidad de definir privilegios de usuario"
+    ],
+    correct: 1
+  },
+  {
+    unit: "Unidad 08 · Administración de BD",
+    q: "Dentro de la planificación de la administración de una base de datos, ¿qué se evalúa típicamente en la etapa de 'evaluación de hardware'?",
+    options: [
+      "Únicamente el color de la carcasa del servidor",
+      "Los recursos necesarios (procesamiento, memoria, almacenamiento) para soportar el volumen de datos y la carga de trabajo esperada",
+      "El lenguaje de programación que usarán los desarrolladores",
+      "La cantidad de tablas que tendrá el modelo entidad-relación"
+    ],
+    correct: 1
+  }
+];
+
+const LEVELS = [
+  {min:0, max:8, label:"Nivel inicial", desc:"Aún no manejás los conceptos básicos de Base de Datos II. Es un buen punto de partida para empezar desde cero."},
+  {min:9, max:17, label:"Nivel básico", desc:"Ya conocés algunos conceptos generales. Con el curso vas a reforzar y ordenar esa base."},
+  {min:18, max:24, label:"Nivel intermedio / avanzado", desc:"Tenés una buena base previa sobre Base de Datos II. El curso te va a permitir profundizar y formalizar esos conocimientos."}
+];
+
+const form = document.getElementById('quiz-form');
+const submitBtn = document.getElementById('submit-btn');
+const progressFill = document.getElementById('progress-fill');
+const progressLabel = document.getElementById('progress-label');
+const answers = new Array(QUESTIONS.length).fill(null);
+
+function render() {
+  form.innerHTML = '';
+  QUESTIONS.forEach((item, qi) => {
+    const qDiv = document.createElement('div');
+    qDiv.className = 'q';
+    qDiv.innerHTML = `
+      <div class="q-unit">${item.unit}</div>
+      <p class="q-title">${qi + 1}. ${item.q}</p>
+      <div class="options" data-qi="${qi}">
+        ${item.options.map((opt, oi) => `
+          <label class="opt" data-oi="${oi}">
+            <input type="radio" name="q${qi}" value="${oi}">
+            <span>${opt}</span>
+          </label>
+        `).join('')}
+      </div>
+    `;
+    form.appendChild(qDiv);
+  });
+
+  form.querySelectorAll('.opt').forEach(label => {
+    label.addEventListener('click', () => {
+      const qi = parseInt(label.parentElement.dataset.qi);
+      const oi = parseInt(label.dataset.oi);
+      answers[qi] = oi;
+      label.parentElement.querySelectorAll('.opt').forEach(o => o.classList.remove('selected'));
+      label.classList.add('selected');
+      updateProgress();
+    });
+  });
+}
+
+function updateProgress() {
+  const answered = answers.filter(a => a !== null).length;
+  progressFill.style.width = (answered / QUESTIONS.length * 100) + '%';
+  progressLabel.textContent = `${answered} de ${QUESTIONS.length} respondidas`;
+  submitBtn.disabled = answered !== QUESTIONS.length;
+  submitBtn.textContent = answered === QUESTIONS.length ? 'Ver mi resultado' : 'Responder para continuar';
+}
+
+submitBtn.addEventListener('click', () => {
+  form.querySelectorAll('.q').forEach((qDiv, qi) => {
+    const correct = QUESTIONS[qi].correct;
+    qDiv.querySelectorAll('.opt').forEach((opt, oi) => {
+      opt.querySelector('input').disabled = true;
+      if (oi === correct) opt.classList.add('correct');
+      else if (oi === answers[qi]) opt.classList.add('incorrect');
+    });
+  });
+
+  let score = 0;
+  const unitScores = {};
+  QUESTIONS.forEach((item, qi) => {
+    if (!unitScores[item.unit]) unitScores[item.unit] = {correct:0, total:0};
+    unitScores[item.unit].total++;
+    if (answers[qi] === item.correct) {
+      score++;
+      unitScores[item.unit].correct++;
+    }
+  });
+
+  document.getElementById('score-num').textContent = `${score}/${QUESTIONS.length}`;
+  const level = LEVELS.find(l => score >= l.min && score <= l.max);
+  document.getElementById('score-level').textContent = level.label;
+  document.getElementById('score-desc').textContent = level.desc;
+
+  const bdRows = document.getElementById('breakdown-rows');
+  bdRows.innerHTML = Object.entries(unitScores).map(([unit, s]) => `
+    <div class="bd-row">
+      <div class="bd-label">${unit.split(' · ')[0]}</div>
+      <div class="bd-track"><div class="bd-fill" style="width:${(s.correct/s.total*100)}%"></div></div>
+      <div class="bd-score">${s.correct}/${s.total}</div>
+    </div>
+  `).join('');
+
+  submitBtn.style.display = 'none';
+  document.getElementById('results').style.display = 'block';
+  window.scrollTo({top: document.getElementById('results').offsetTop - 20, behavior: 'smooth'});
+
+  sendResultsAnonymously(score, unitScores);
+});
+
+function sendResultsAnonymously(score, unitScores) {
+  const statusEl = document.getElementById('send-status');
+
+  if (!SHEET_ENDPOINT || SHEET_ENDPOINT === "PEGAR_URL_AQUI") {
+    statusEl.textContent = "";
+    return;
+  }
+
+  const payload = {
+    timestamp: new Date().toISOString(),
+    score_total: score,
+    total_preguntas: QUESTIONS.length
+  };
+  Object.entries(unitScores).forEach(([unit, s], i) => {
+    const key = "unidad_" + String(i + 1).padStart(2, "0");
+    payload[key + "_correctas"] = s.correct;
+    payload[key + "_total"] = s.total;
+  });
+
+  statusEl.textContent = "Enviando resultado de forma anónima...";
+  statusEl.classList.remove('ok');
+
+  fetch(SHEET_ENDPOINT, {
+    method: "POST",
+    mode: "no-cors",
+    headers: { "Content-Type": "text/plain" },
+    body: JSON.stringify(payload)
+  })
+  .then(() => {
+    statusEl.textContent = "Resultado enviado de forma anónima. ¡Gracias por completar el test!";
+    statusEl.classList.add('ok');
+  })
+  .catch(() => {
+    statusEl.textContent = "No se pudo enviar el resultado (revisá tu conexión). Tu puntaje igual se muestra arriba.";
+  });
+}
+
+document.getElementById('retry-btn').addEventListener('click', () => {
+  answers.fill(null);
+  document.getElementById('results').style.display = 'none';
+  submitBtn.style.display = 'block';
+  render();
+  updateProgress();
+  window.scrollTo({top:0, behavior:'smooth'});
+});
+
+render();
+updateProgress();
+</script>
+</body>
+</html>
