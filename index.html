@@ -6,26 +6,27 @@
 <title>Test Diagnóstico – Base de Datos II</title>
 <style>
   :root{
-    --ink:#1c2b2d;
-    --paper:#f6f3ec;
-    --line:#d8cfc0;
-    --signal:#2f6f5e;
-    --signal-dim:#e4efe9;
-    --warn:#a4432f;
-    --warn-dim:#f6e5e0;
-    --muted:#6f6a5e;
+    --bg:#15171a;
+    --panel:#1c1f23;
+    --ink:#e7e5df;
+    --line:#33373d;
+    --signal:#7a9b8e;
+    --signal-dim:#232b28;
+    --warn:#b5695a;
+    --warn-dim:#2b2220;
+    --muted:#8b8f96;
   }
   *{box-sizing:border-box;}
   body{
     margin:0;
-    background:var(--paper);
+    background:var(--bg);
     color:var(--ink);
     font-family:'Georgia','Iowan Old Style',serif;
     line-height:1.5;
     padding:0 0 80px;
   }
   .wrap{max-width:720px;margin:0 auto;padding:40px 24px;}
-  header{border-bottom:3px solid var(--ink);padding-bottom:20px;margin-bottom:32px;}
+  header{border-bottom:1px solid var(--line);padding-bottom:20px;margin-bottom:32px;}
   .eyebrow{
     font-family:'Helvetica Neue',Arial,sans-serif;
     text-transform:uppercase;
@@ -35,11 +36,11 @@
     font-weight:700;
     margin-bottom:8px;
   }
-  h1{font-size:32px;margin:0 0 10px;letter-spacing:-0.01em;}
+  h1{font-size:32px;margin:0 0 10px;letter-spacing:-0.01em;color:var(--ink);}
   .sub{color:var(--muted);font-size:15px;font-family:'Helvetica Neue',Arial,sans-serif;}
 
   #progress-bar{
-    position:sticky;top:0;background:var(--paper);padding:14px 0 10px;z-index:5;
+    position:sticky;top:0;background:var(--bg);padding:14px 0 10px;z-index:5;
     border-bottom:1px solid var(--line);
   }
   .progress-track{height:6px;background:var(--line);border-radius:3px;overflow:hidden;}
@@ -59,7 +60,7 @@
     font-size:11px;text-transform:uppercase;letter-spacing:.12em;
     color:var(--signal);font-weight:700;margin-bottom:6px;
   }
-  .q-title{font-size:19px;margin:0 0 16px;}
+  .q-title{font-size:19px;margin:0 0 16px;color:var(--ink);}
   .options{display:flex;flex-direction:column;gap:10px;}
   .opt{
     display:flex;align-items:flex-start;gap:12px;
@@ -69,7 +70,8 @@
     cursor:pointer;
     font-family:'Helvetica Neue',Arial,sans-serif;
     font-size:15px;
-    background:#fff;
+    background:var(--panel);
+    color:var(--ink);
     transition:border-color .15s, background .15s;
   }
   .opt:hover{border-color:var(--signal);}
@@ -82,8 +84,8 @@
     font-family:'Helvetica Neue',Arial,sans-serif;
     font-weight:700;
     font-size:15px;
-    background:var(--ink);
-    color:var(--paper);
+    background:var(--signal);
+    color:var(--bg);
     border:none;
     border-radius:8px;
     padding:16px 28px;
@@ -92,19 +94,19 @@
     margin-top:24px;
     letter-spacing:.02em;
   }
-  #submit-btn:hover, #retry-btn:hover{background:var(--signal);}
+  #submit-btn:hover, #retry-btn:hover{background:#8fae9f;}
   #submit-btn:disabled{background:var(--line);color:var(--muted);cursor:not-allowed;}
 
   #results{display:none;}
   .score-hero{
     text-align:center;
     padding:36px 20px;
-    border:3px solid var(--ink);
+    border:1px solid var(--line);
     border-radius:12px;
     margin-bottom:28px;
-    background:#fff;
+    background:var(--panel);
   }
-  .score-num{font-size:56px;font-weight:700;line-height:1;}
+  .score-num{font-size:56px;font-weight:700;line-height:1;color:var(--ink);}
   .score-level{
     font-family:'Helvetica Neue',Arial,sans-serif;
     text-transform:uppercase;letter-spacing:.1em;font-size:13px;
@@ -113,12 +115,12 @@
   .score-desc{font-family:'Helvetica Neue',Arial,sans-serif;color:var(--muted);font-size:14px;margin-top:8px;}
 
   .breakdown{font-family:'Helvetica Neue',Arial,sans-serif;font-size:14px;}
-  .breakdown h3{font-family:Georgia,serif;font-size:17px;margin:0 0 14px;}
+  .breakdown h3{font-family:Georgia,serif;font-size:17px;margin:0 0 14px;color:var(--ink);}
   .bd-row{display:flex;align-items:center;gap:12px;margin-bottom:10px;}
   .bd-label{flex:0 0 150px;font-size:13px;color:var(--muted);}
   .bd-track{flex:1;height:8px;background:var(--line);border-radius:4px;overflow:hidden;}
   .bd-fill{height:100%;background:var(--signal);}
-  .bd-score{flex:0 0 34px;text-align:right;font-size:13px;font-weight:700;}
+  .bd-score{flex:0 0 34px;text-align:right;font-size:13px;font-weight:700;color:var(--ink);}
 
   #quiz-form{display:block;}
 
@@ -135,7 +137,7 @@
 <body>
 <div class="wrap">
   <header>
-    <div class="eyebrow">Base de Datos II · Uninorte</div>
+    <div class="eyebrow">Base de Datos II · UniNorte</div>
     <h1>Test Diagnóstico</h1>
     <div class="sub">24 preguntas de opción múltiple. Elegí la respuesta que consideres correcta en cada una — no hay penalización por intentarlo, esto es solo para conocer tu punto de partida. Tu resultado es completamente anónimo.</div>
   </header>
@@ -172,69 +174,69 @@ const QUESTIONS = [
   // Unidad 01: Modelos de Base de Datos Convencionales
   {
     unit: "Unidad 01 · BD Convencionales",
-    q: "¿Qué representa principalmente un diagrama entidad-relación (DER)?",
+    q: "¿Qué es un diagrama entidad-relación (DER)?",
     options: [
-      "El código SQL final de la base de datos",
-      "Las entidades del dominio, sus atributos y las relaciones entre ellas",
-      "La configuración física del servidor de base de datos",
-      "El plan de copias de seguridad de la base de datos"
+      "Una representación gráfica de las entidades de un sistema y las relaciones entre ellas",
+      "Un archivo de configuración del servidor",
+      "Un tipo de copia de seguridad",
+      "Un lenguaje de programación"
+    ],
+    correct: 0
+  },
+  {
+    unit: "Unidad 01 · BD Convencionales",
+    q: "¿Para qué sirve normalizar una base de datos?",
+    options: [
+      "Para hacerla más lenta",
+      "Para reducir la redundancia y evitar datos duplicados o inconsistentes",
+      "Para borrar todas las tablas",
+      "Para convertirla en una base de datos NoSQL"
     ],
     correct: 1
   },
   {
     unit: "Unidad 01 · BD Convencionales",
-    q: "¿Cuál es el objetivo principal del proceso de normalización?",
+    q: "¿Qué es una dependencia funcional entre dos atributos?",
     options: [
-      "Aumentar la redundancia de datos para mayor velocidad de lectura",
-      "Reducir la redundancia y evitar anomalías de inserción, actualización y borrado",
-      "Convertir la base de datos a un modelo orientado a objetos",
-      "Eliminar todas las relaciones entre tablas"
+      "Que el valor de un atributo determina el valor de otro",
+      "Que dos atributos nunca pueden estar en la misma tabla",
+      "Que un atributo depende de la velocidad de internet",
+      "Que ambos atributos deben tener el mismo nombre"
     ],
-    correct: 1
-  },
-  {
-    unit: "Unidad 01 · BD Convencionales",
-    q: "En el contexto de dependencias funcionales, si A determina funcionalmente a B, esto significa que:",
-    options: [
-      "A cada valor de B le corresponde un único valor de A",
-      "A cada valor de A le corresponde como máximo un único valor de B",
-      "A y B siempre deben estar en tablas separadas",
-      "B no puede depender de ningún otro atributo"
-    ],
-    correct: 1
+    correct: 0
   },
 
   // Unidad 02: Modelos de BD Orientados a Objetos
   {
     unit: "Unidad 02 · BD Orientadas a Objetos",
-    q: "¿Cuál es una diferencia clave entre la modelización orientada a objetos y la modelización relacional?",
+    q: "¿Qué combina un modelo orientado a objetos que el modelo relacional tradicional no combina de la misma forma?",
     options: [
-      "La orientada a objetos no permite almacenar datos, solo comportamiento",
-      "La orientada a objetos integra datos y comportamiento (métodos) en una misma unidad, mientras que la relacional se centra en tablas y datos",
-      "La relacional siempre es más rápida en cualquier escenario",
-      "No existen diferencias reales entre ambos enfoques"
+      "Datos y comportamiento (métodos) en una misma unidad",
+      "Solamente tablas",
+      "Solamente índices",
+      "Solamente copias de seguridad"
     ],
-    correct: 1
+    correct: 0
   },
   {
     unit: "Unidad 02 · BD Orientadas a Objetos",
-    q: "En el paradigma orientado a objetos aplicado a bases de datos, ¿qué define principalmente una clase?",
+    q: "¿Qué es una clase en el paradigma orientado a objetos?",
     options: [
-      "Una tabla sin ninguna relación con otras",
-      "Una plantilla que agrupa atributos y comportamientos comunes para un conjunto de objetos",
-      "Un índice que acelera las consultas",
-      "Un lenguaje de consulta específico"
+      "Una plantilla que define atributos y comportamientos comunes para un conjunto de objetos",
+      "Una copia de seguridad automática",
+      "Un tipo de índice",
+      "Un usuario con permisos de administrador"
     ],
-    correct: 1
+    correct: 0
   },
   {
     unit: "Unidad 02 · BD Orientadas a Objetos",
-    q: "Dentro de las herramientas para bases de datos orientadas a objetos, ¿qué función cumple el ODL (lenguaje de definición de datos)?",
+    q: "¿Para qué se usa el ODL (lenguaje de definición de datos orientado a objetos)?",
     options: [
-      "Permite definir la estructura y los tipos de los objetos de la base de datos",
-      "Permite exclusivamente hacer consultas de lectura",
-      "Sirve únicamente para administrar usuarios",
-      "Reemplaza por completo al modelo entidad-relación"
+      "Para definir la estructura de los objetos de la base de datos",
+      "Para hacer copias de seguridad",
+      "Para eliminar usuarios",
+      "Para transformar archivos XML"
     ],
     correct: 0
   },
@@ -242,34 +244,34 @@ const QUESTIONS = [
   // Unidad 03: Base de Datos Relacionales Extendido
   {
     unit: "Unidad 03 · BD Relacional Extendida",
-    q: "¿Qué herramienta se utiliza para modelar las abstracciones de diseño conceptual extendidas, como la generalización y la agregación?",
+    q: "¿Qué es el DERE (diagrama entidad-relación extendido)?",
     options: [
-      "El diagrama entidad-relación extendido (DERE)",
-      "El lenguaje XQuery",
-      "El modelo de mapeo objeto-relacional",
-      "El álgebra relacional básica"
+      "Una herramienta para modelar conceptos más complejos como generalización y agregación",
+      "Un tipo de copia de seguridad",
+      "Un lenguaje de consulta NoSQL",
+      "Un protocolo de red"
     ],
     correct: 0
   },
   {
     unit: "Unidad 03 · BD Relacional Extendida",
-    q: "En el modelo entidad-relación extendido, ¿qué representa la generalización?",
+    q: "¿Qué representa la generalización en el modelo entidad-relación extendido?",
     options: [
-      "La unión de varias bases de datos en una sola",
-      "Una relación jerárquica donde entidades más específicas heredan atributos de una entidad más general",
-      "La eliminación de atributos redundantes en una tabla",
-      "Un tipo de índice utilizado para optimizar consultas"
+      "Que entidades más específicas heredan atributos de una entidad más general",
+      "Que se elimina una tabla completa",
+      "Que se combinan dos bases de datos distintas",
+      "Que se crea un nuevo índice hash"
     ],
-    correct: 1
+    correct: 0
   },
   {
     unit: "Unidad 03 · BD Relacional Extendida",
-    q: "¿Qué concepto describe mejor la agregación en el diseño conceptual extendido?",
+    q: "¿Qué es la agregación en el diseño conceptual extendido?",
     options: [
-      "Tratar una relación entre entidades como una entidad de orden superior, para poder relacionarla con otras entidades",
-      "Duplicar una entidad para mejorar el rendimiento",
-      "Convertir una entidad débil en una entidad fuerte",
-      "Eliminar una relación que ya no se utiliza"
+      "Tratar una relación entre entidades como si fuera una entidad, para poder vincularla con otras",
+      "Borrar atributos que no se usan",
+      "Duplicar una tabla para tener una copia",
+      "Un tipo de consulta SQL básica"
     ],
     correct: 0
   },
@@ -277,34 +279,34 @@ const QUESTIONS = [
   // Unidad 04: Conceptos Avanzados
   {
     unit: "Unidad 04 · Conceptos Avanzados",
-    q: "¿Qué diferencia principal existe entre un índice ordenado y un índice asociativo (hash)?",
+    q: "¿Para qué se utiliza un índice en una base de datos?",
     options: [
-      "No hay ninguna diferencia entre ambos",
-      "El índice ordenado mantiene los valores en un orden secuencial (útil para búsquedas por rango); el índice asociativo usa una función hash para acceso directo por clave",
-      "El índice asociativo solo puede usarse en bases de datos orientadas a objetos",
-      "El índice ordenado no permite hacer búsquedas exactas por clave"
+      "Para acelerar la búsqueda de datos",
+      "Para borrar datos automáticamente",
+      "Para crear usuarios nuevos",
+      "Para traducir la base de datos a otro idioma"
     ],
-    correct: 1
+    correct: 0
   },
   {
     unit: "Unidad 04 · Conceptos Avanzados",
-    q: "Al evaluar un esquema de indexación, ¿cuál de los siguientes factores es relevante a tener en cuenta según la teoría de índices?",
+    q: "¿Qué diferencia hay entre un índice ordenado y uno asociativo (hash)?",
     options: [
-      "Únicamente el color con que se represente el diagrama",
-      "El tiempo de acceso, el tiempo de inserción/borrado y el espacio adicional requerido por el índice",
-      "La cantidad de usuarios conectados simultáneamente a la red eléctrica",
-      "El nombre asignado a la tabla en el diccionario de datos"
+      "El ordenado mantiene los datos en secuencia; el hash usa una función para acceder directo por clave",
+      "No hay ninguna diferencia entre ellos",
+      "El hash solo funciona en bases de datos XML",
+      "El ordenado no permite hacer ninguna búsqueda"
     ],
-    correct: 1
+    correct: 0
   },
   {
     unit: "Unidad 04 · Conceptos Avanzados",
-    q: "¿Por qué es importante gestionar versiones y autorizaciones en un esquema de base de datos?",
+    q: "¿Por qué es importante definir autorizaciones (permisos) sobre una base de datos?",
     options: [
-      "Porque permite controlar los cambios en la estructura y regular qué usuarios pueden acceder o modificar cada parte de los datos",
-      "Porque reemplaza la necesidad de hacer copias de seguridad",
-      "Porque acelera automáticamente todas las consultas SQL",
-      "Porque elimina la necesidad de definir claves primarias"
+      "Para controlar qué usuarios pueden ver o modificar cada parte de los datos",
+      "Para que la base de datos ocupe menos espacio",
+      "Para eliminar la necesidad de hacer copias de seguridad",
+      "Para acelerar automáticamente todas las consultas"
     ],
     correct: 0
   },
@@ -312,141 +314,141 @@ const QUESTIONS = [
   // Unidad 05: Mapeo Objeto Relacional
   {
     unit: "Unidad 05 · Mapeo Objeto-Relacional",
-    q: "¿Qué problema resuelve principalmente una herramienta de mapeo objeto-relacional (ORM) como Hibernate?",
+    q: "¿Para qué sirve una herramienta de mapeo objeto-relacional (ORM) como Hibernate?",
     options: [
-      "La diferencia de representación entre el modelo orientado a objetos de una aplicación y el modelo relacional de la base de datos",
-      "La necesidad de instalar un motor de base de datos",
-      "La conversión de archivos XML a formato JSON",
-      "La creación de copias de seguridad automáticas"
+      "Para conectar el modelo orientado a objetos de una aplicación con el modelo relacional de la base de datos",
+      "Para instalar el motor de base de datos",
+      "Para crear diagramas XML",
+      "Para hacer copias de seguridad automáticas"
     ],
     correct: 0
   },
   {
     unit: "Unidad 05 · Mapeo Objeto-Relacional",
-    q: "¿Qué es HQL en el contexto de Hibernate?",
+    q: "¿Qué es HQL?",
     options: [
-      "Un lenguaje de consulta orientado a objetos, similar a SQL pero que trabaja sobre entidades del modelo en lugar de tablas directamente",
-      "Un protocolo de red para bases de datos distribuidas",
-      "Un formato de archivo para almacenar imágenes en la base de datos",
-      "Un tipo de índice hash exclusivo de bases de datos NoSQL"
+      "Un lenguaje de consulta orientado a objetos, parecido a SQL, usado en Hibernate",
+      "Un protocolo de red",
+      "Un formato de imagen",
+      "Un tipo de índice hash"
     ],
     correct: 0
   },
   {
     unit: "Unidad 05 · Mapeo Objeto-Relacional",
-    q: "En el mapeo objeto-relacional, ¿qué ocurre generalmente con una clase de la aplicación al mapearla a la base de datos?",
+    q: "En el mapeo objeto-relacional, ¿con qué se corresponde típicamente una clase de la aplicación?",
     options: [
-      "Se descarta completamente, ya que no puede representarse en una base relacional",
-      "Se corresponde típicamente con una tabla, y sus atributos con columnas de esa tabla",
-      "Se convierte automáticamente en un documento XML",
-      "Se transforma en un índice asociativo"
+      "Con una tabla de la base de datos",
+      "Con un archivo de video",
+      "Con una copia de seguridad",
+      "Con un usuario del sistema"
     ],
-    correct: 1
+    correct: 0
   },
 
   // Unidad 06: Bases de Datos XML
   {
     unit: "Unidad 06 · Bases de Datos XML",
-    q: "¿Para qué se utiliza principalmente el lenguaje XPath?",
+    q: "¿Para qué se usa XPath?",
     options: [
-      "Para definir rutas de acceso y navegar por la estructura jerárquica de un documento XML",
-      "Para transformar un documento XML en una hoja de cálculo",
-      "Para cifrar el contenido de un archivo XML",
-      "Para crear índices asociativos en bases de datos relacionales"
+      "Para navegar y ubicar partes específicas dentro de un documento XML",
+      "Para transformar el XML en una imagen",
+      "Para hacer copias de seguridad",
+      "Para crear usuarios"
     ],
     correct: 0
   },
   {
     unit: "Unidad 06 · Bases de Datos XML",
-    q: "¿Qué función cumple XSLT respecto a un documento XML?",
+    q: "¿Para qué se usa XSLT?",
     options: [
-      "Permite transformar el documento XML en otro formato o estructura, aplicando hojas de estilo",
-      "Permite ejecutar consultas de agregación como si fuera SQL, sin ninguna transformación",
-      "Sirve únicamente para validar la sintaxis del XML",
-      "Convierte el XML directamente en una base de datos orientada a objetos"
+      "Para transformar un documento XML en otro formato o estructura",
+      "Para eliminar un documento XML",
+      "Para crear índices hash",
+      "Para definir usuarios y permisos"
     ],
     correct: 0
   },
   {
     unit: "Unidad 06 · Bases de Datos XML",
-    q: "¿Cuál es el propósito principal de XQuery?",
+    q: "¿Para qué sirve XQuery?",
     options: [
-      "Definir la apariencia visual de un documento XML",
-      "Realizar consultas sobre datos almacenados en documentos XML",
-      "Comprimir archivos XML para reducir su tamaño",
-      "Sustituir por completo al lenguaje XPath"
+      "Para hacer consultas sobre datos almacenados en documentos XML",
+      "Para darle color a un documento XML",
+      "Para comprimir archivos",
+      "Para instalar un servidor"
     ],
-    correct: 1
+    correct: 0
   },
 
   // Unidad 07: Bases de Datos NoSQL
   {
     unit: "Unidad 07 · Bases de Datos NoSQL",
-    q: "¿Cuál es una característica distintiva de las bases de datos NoSQL frente a las relacionales tradicionales?",
+    q: "¿Qué característica es típica de las bases de datos NoSQL?",
     options: [
-      "Requieren obligatoriamente un esquema fijo y rígido antes de insertar cualquier dato",
-      "Suelen priorizar la flexibilidad de esquema y la escalabilidad horizontal por sobre las relaciones estrictas entre tablas",
-      "No permiten almacenar grandes volúmenes de datos",
-      "Solo pueden ejecutarse en un único servidor"
+      "Mayor flexibilidad de esquema en comparación con las bases de datos relacionales",
+      "Un esquema fijo que nunca puede cambiar",
+      "Solo pueden usarse en una computadora",
+      "No permiten guardar texto"
     ],
-    correct: 1
+    correct: 0
   },
   {
     unit: "Unidad 07 · Bases de Datos NoSQL",
-    q: "¿Qué significa que una base de datos NoSQL escale 'horizontalmente'?",
+    q: "¿Qué significa que una base de datos escale 'horizontalmente'?",
     options: [
-      "Que se mejora el rendimiento agregando más memoria RAM a un único servidor",
-      "Que se distribuye la carga y los datos agregando más servidores o nodos a un clúster",
-      "Que se reduce la cantidad de datos almacenados para mejorar la velocidad",
-      "Que se elimina la necesidad de hacer consultas"
+      "Que se agregan más servidores o nodos para repartir la carga y los datos",
+      "Que se agranda la pantalla del monitor",
+      "Que se borran datos para ganar espacio",
+      "Que se reduce la cantidad de usuarios"
     ],
-    correct: 1
+    correct: 0
   },
   {
     unit: "Unidad 07 · Bases de Datos NoSQL",
-    q: "¿En qué escenario suele preferirse una base de datos NoSQL por sobre una relacional tradicional?",
+    q: "¿En qué caso suele convenir más usar una base de datos NoSQL?",
     options: [
-      "Cuando se necesita garantizar estrictamente la integridad referencial entre múltiples tablas relacionadas",
-      "Cuando se requiere manejar grandes volúmenes de datos con alta escalabilidad y esquemas flexibles o cambiantes",
-      "Cuando el volumen de datos es mínimo y no va a crecer nunca",
-      "Cuando se necesita ejecutar exclusivamente consultas SQL estándar"
+      "Cuando se manejan grandes volúmenes de datos con necesidad de alta escalabilidad",
+      "Cuando los datos nunca van a crecer",
+      "Cuando se necesita una única tabla pequeña",
+      "Cuando no se necesita guardar ningún dato"
     ],
-    correct: 1
+    correct: 0
   },
 
   // Unidad 08: Administración de Base de Datos
   {
     unit: "Unidad 08 · Administración de BD",
-    q: "¿Por qué es importante asignar roles y privilegios específicos a los usuarios de una base de datos?",
+    q: "¿Por qué es importante asignar roles y privilegios a los usuarios de una base de datos?",
     options: [
-      "Para que todos los usuarios tengan acceso total a todas las operaciones sin restricciones",
-      "Para controlar qué acciones puede realizar cada usuario y proteger la seguridad e integridad de los datos",
-      "Para que la base de datos ocupe menos espacio en disco",
-      "Para acelerar automáticamente todas las consultas"
+      "Para controlar qué acciones puede hacer cada usuario y proteger la seguridad de los datos",
+      "Para que todos tengan acceso total sin restricciones",
+      "Para que la base de datos sea más pequeña",
+      "Para acelerar las consultas automáticamente"
     ],
-    correct: 1
+    correct: 0
   },
   {
     unit: "Unidad 08 · Administración de BD",
-    q: "¿Cuál es el objetivo principal de realizar copias de seguridad periódicas de una base de datos?",
+    q: "¿Para qué sirven las copias de seguridad de una base de datos?",
     options: [
-      "Aumentar la velocidad de las consultas de lectura",
-      "Poder recuperar la información ante fallos, errores o pérdida de datos",
-      "Eliminar datos duplicados automáticamente",
-      "Reemplazar la necesidad de definir privilegios de usuario"
+      "Para poder recuperar la información en caso de fallas o pérdida de datos",
+      "Para hacer las consultas más rápidas",
+      "Para eliminar usuarios duplicados",
+      "Para reemplazar la necesidad de definir permisos"
     ],
-    correct: 1
+    correct: 0
   },
   {
     unit: "Unidad 08 · Administración de BD",
-    q: "Dentro de la planificación de la administración de una base de datos, ¿qué se evalúa típicamente en la etapa de 'evaluación de hardware'?",
+    q: "Al planificar una base de datos, ¿qué se evalúa en la etapa de 'evaluación de hardware'?",
     options: [
-      "Únicamente el color de la carcasa del servidor",
-      "Los recursos necesarios (procesamiento, memoria, almacenamiento) para soportar el volumen de datos y la carga de trabajo esperada",
-      "El lenguaje de programación que usarán los desarrolladores",
-      "La cantidad de tablas que tendrá el modelo entidad-relación"
+      "Los recursos necesarios (procesamiento, memoria, almacenamiento) para soportar la base de datos",
+      "El color del servidor",
+      "El lenguaje de programación de la interfaz gráfica",
+      "La cantidad de preguntas del test"
     ],
-    correct: 1
+    correct: 0
   }
 ];
 
