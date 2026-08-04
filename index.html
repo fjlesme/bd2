@@ -168,7 +168,7 @@
 <script>
 // Pegá acá la URL de tu Google Apps Script publicado (ver instrucciones del README).
 // Mientras diga "PEGAR_URL_AQUI", los resultados NO se envían a ningún lado, solo se muestran en pantalla.
-const SHEET_ENDPOINT = "https://script.google.com/macros/s/AKfycbxI0sgEJBc4RJ2M_rARku78hfge_Uttkv_ciwL_krdDvVIqqynjckhirbFcN4creg45NA/exec";
+const SHEET_ENDPOINT = "https://script.google.com/macros/s/AKfycbzYv5c_Hpx5O4SCl01O4LlusQw6_hlBtBRH6ec0X3_-zpdxwwAVvDHlH4RvqytRR6anTQ/exec";
 
 const QUESTIONS = [
   // Unidad 01: Modelos de Base de Datos Convencionales
@@ -176,34 +176,34 @@ const QUESTIONS = [
     unit: "Unidad 01 · BD Convencionales",
     q: "¿Qué es un diagrama entidad-relación (DER)?",
     options: [
-      "Una representación gráfica de las entidades de un sistema y las relaciones entre ellas",
       "Un archivo de configuración del servidor",
+      "Una representación gráfica de las entidades de un sistema y las relaciones entre ellas",
       "Un tipo de copia de seguridad",
       "Un lenguaje de programación"
     ],
-    correct: 0
+    correct: 1
   },
   {
     unit: "Unidad 01 · BD Convencionales",
     q: "¿Para qué sirve normalizar una base de datos?",
     options: [
       "Para hacerla más lenta",
-      "Para reducir la redundancia y evitar datos duplicados o inconsistentes",
       "Para borrar todas las tablas",
+      "Para reducir la redundancia y evitar datos duplicados o inconsistentes",
       "Para convertirla en una base de datos NoSQL"
     ],
-    correct: 1
+    correct: 2
   },
   {
     unit: "Unidad 01 · BD Convencionales",
     q: "¿Qué es una dependencia funcional entre dos atributos?",
     options: [
-      "Que el valor de un atributo determina el valor de otro",
       "Que dos atributos nunca pueden estar en la misma tabla",
       "Que un atributo depende de la velocidad de internet",
-      "Que ambos atributos deben tener el mismo nombre"
+      "Que ambos atributos deben tener el mismo nombre",
+      "Que el valor de un atributo determina el valor de otro"
     ],
-    correct: 0
+    correct: 3
   },
 
   // Unidad 02: Modelos de BD Orientados a Objetos
@@ -211,34 +211,34 @@ const QUESTIONS = [
     unit: "Unidad 02 · BD Orientadas a Objetos",
     q: "¿Qué combina un modelo orientado a objetos que el modelo relacional tradicional no combina de la misma forma?",
     options: [
-      "Datos y comportamiento (métodos) en una misma unidad",
       "Solamente tablas",
+      "Datos y comportamiento (métodos) en una misma unidad",
       "Solamente índices",
       "Solamente copias de seguridad"
     ],
-    correct: 0
+    correct: 1
   },
   {
     unit: "Unidad 02 · BD Orientadas a Objetos",
     q: "¿Qué es una clase en el paradigma orientado a objetos?",
     options: [
-      "Una plantilla que define atributos y comportamientos comunes para un conjunto de objetos",
       "Una copia de seguridad automática",
       "Un tipo de índice",
+      "Una plantilla que define atributos y comportamientos comunes para un conjunto de objetos",
       "Un usuario con permisos de administrador"
     ],
-    correct: 0
+    correct: 2
   },
   {
     unit: "Unidad 02 · BD Orientadas a Objetos",
     q: "¿Para qué se usa el ODL (lenguaje de definición de datos orientado a objetos)?",
     options: [
-      "Para definir la estructura de los objetos de la base de datos",
       "Para hacer copias de seguridad",
       "Para eliminar usuarios",
-      "Para transformar archivos XML"
+      "Para transformar archivos XML",
+      "Para definir la estructura de los objetos de la base de datos"
     ],
-    correct: 0
+    correct: 3
   },
 
   // Unidad 03: Base de Datos Relacionales Extendido
@@ -246,34 +246,34 @@ const QUESTIONS = [
     unit: "Unidad 03 · BD Relacional Extendida",
     q: "¿Qué es el DERE (diagrama entidad-relación extendido)?",
     options: [
-      "Una herramienta para modelar conceptos más complejos como generalización y agregación",
       "Un tipo de copia de seguridad",
+      "Una herramienta para modelar conceptos más complejos como generalización y agregación",
       "Un lenguaje de consulta NoSQL",
       "Un protocolo de red"
     ],
-    correct: 0
+    correct: 1
   },
   {
     unit: "Unidad 03 · BD Relacional Extendida",
     q: "¿Qué representa la generalización en el modelo entidad-relación extendido?",
     options: [
-      "Que entidades más específicas heredan atributos de una entidad más general",
       "Que se elimina una tabla completa",
       "Que se combinan dos bases de datos distintas",
+      "Que entidades más específicas heredan atributos de una entidad más general",
       "Que se crea un nuevo índice hash"
     ],
-    correct: 0
+    correct: 2
   },
   {
     unit: "Unidad 03 · BD Relacional Extendida",
     q: "¿Qué es la agregación en el diseño conceptual extendido?",
     options: [
-      "Tratar una relación entre entidades como si fuera una entidad, para poder vincularla con otras",
       "Borrar atributos que no se usan",
       "Duplicar una tabla para tener una copia",
-      "Un tipo de consulta SQL básica"
+      "Un tipo de consulta SQL básica",
+      "Tratar una relación entre entidades como si fuera una entidad, para poder vincularla con otras"
     ],
-    correct: 0
+    correct: 3
   },
 
   // Unidad 04: Conceptos Avanzados
@@ -281,34 +281,34 @@ const QUESTIONS = [
     unit: "Unidad 04 · Conceptos Avanzados",
     q: "¿Para qué se utiliza un índice en una base de datos?",
     options: [
-      "Para acelerar la búsqueda de datos",
       "Para borrar datos automáticamente",
+      "Para acelerar la búsqueda de datos",
       "Para crear usuarios nuevos",
       "Para traducir la base de datos a otro idioma"
     ],
-    correct: 0
+    correct: 1
   },
   {
     unit: "Unidad 04 · Conceptos Avanzados",
     q: "¿Qué diferencia hay entre un índice ordenado y uno asociativo (hash)?",
     options: [
-      "El ordenado mantiene los datos en secuencia; el hash usa una función para acceder directo por clave",
       "No hay ninguna diferencia entre ellos",
       "El hash solo funciona en bases de datos XML",
-      "El ordenado no permite hacer ninguna búsqueda"
+      "El ordenado no permite hacer ninguna búsqueda",
+      "El ordenado mantiene los datos en secuencia; el hash usa una función para acceder directo por clave"
     ],
-    correct: 0
+    correct: 3
   },
   {
     unit: "Unidad 04 · Conceptos Avanzados",
     q: "¿Por qué es importante definir autorizaciones (permisos) sobre una base de datos?",
     options: [
-      "Para controlar qué usuarios pueden ver o modificar cada parte de los datos",
       "Para que la base de datos ocupe menos espacio",
+      "Para controlar qué usuarios pueden ver o modificar cada parte de los datos",
       "Para eliminar la necesidad de hacer copias de seguridad",
       "Para acelerar automáticamente todas las consultas"
     ],
-    correct: 0
+    correct: 1
   },
 
   // Unidad 05: Mapeo Objeto Relacional
@@ -316,34 +316,34 @@ const QUESTIONS = [
     unit: "Unidad 05 · Mapeo Objeto-Relacional",
     q: "¿Para qué sirve una herramienta de mapeo objeto-relacional (ORM) como Hibernate?",
     options: [
-      "Para conectar el modelo orientado a objetos de una aplicación con el modelo relacional de la base de datos",
       "Para instalar el motor de base de datos",
       "Para crear diagramas XML",
+      "Para conectar el modelo orientado a objetos de una aplicación con el modelo relacional de la base de datos",
       "Para hacer copias de seguridad automáticas"
     ],
-    correct: 0
+    correct: 2
   },
   {
     unit: "Unidad 05 · Mapeo Objeto-Relacional",
     q: "¿Qué es HQL?",
     options: [
-      "Un lenguaje de consulta orientado a objetos, parecido a SQL, usado en Hibernate",
       "Un protocolo de red",
       "Un formato de imagen",
-      "Un tipo de índice hash"
+      "Un tipo de índice hash",
+      "Un lenguaje de consulta orientado a objetos, parecido a SQL, usado en Hibernate"
     ],
-    correct: 0
+    correct: 3
   },
   {
     unit: "Unidad 05 · Mapeo Objeto-Relacional",
     q: "En el mapeo objeto-relacional, ¿con qué se corresponde típicamente una clase de la aplicación?",
     options: [
-      "Con una tabla de la base de datos",
       "Con un archivo de video",
+      "Con una tabla de la base de datos",
       "Con una copia de seguridad",
       "Con un usuario del sistema"
     ],
-    correct: 0
+    correct: 1
   },
 
   // Unidad 06: Bases de Datos XML
@@ -351,34 +351,34 @@ const QUESTIONS = [
     unit: "Unidad 06 · Bases de Datos XML",
     q: "¿Para qué se usa XPath?",
     options: [
-      "Para navegar y ubicar partes específicas dentro de un documento XML",
       "Para transformar el XML en una imagen",
       "Para hacer copias de seguridad",
+      "Para navegar y ubicar partes específicas dentro de un documento XML",
       "Para crear usuarios"
     ],
-    correct: 0
+    correct: 2
   },
   {
     unit: "Unidad 06 · Bases de Datos XML",
     q: "¿Para qué se usa XSLT?",
     options: [
-      "Para transformar un documento XML en otro formato o estructura",
       "Para eliminar un documento XML",
       "Para crear índices hash",
-      "Para definir usuarios y permisos"
+      "Para definir usuarios y permisos",
+      "Para transformar un documento XML en otro formato o estructura"
     ],
-    correct: 0
+    correct: 3
   },
   {
     unit: "Unidad 06 · Bases de Datos XML",
     q: "¿Para qué sirve XQuery?",
     options: [
-      "Para hacer consultas sobre datos almacenados en documentos XML",
       "Para darle color a un documento XML",
+      "Para hacer consultas sobre datos almacenados en documentos XML",
       "Para comprimir archivos",
       "Para instalar un servidor"
     ],
-    correct: 0
+    correct: 1
   },
 
   // Unidad 07: Bases de Datos NoSQL
@@ -386,34 +386,34 @@ const QUESTIONS = [
     unit: "Unidad 07 · Bases de Datos NoSQL",
     q: "¿Qué característica es típica de las bases de datos NoSQL?",
     options: [
-      "Mayor flexibilidad de esquema en comparación con las bases de datos relacionales",
       "Un esquema fijo que nunca puede cambiar",
       "Solo pueden usarse en una computadora",
+      "Mayor flexibilidad de esquema en comparación con las bases de datos relacionales",
       "No permiten guardar texto"
     ],
-    correct: 0
+    correct: 2
   },
   {
     unit: "Unidad 07 · Bases de Datos NoSQL",
     q: "¿Qué significa que una base de datos escale 'horizontalmente'?",
     options: [
-      "Que se agregan más servidores o nodos para repartir la carga y los datos",
       "Que se agranda la pantalla del monitor",
+      "Que se agregan más servidores o nodos para repartir la carga y los datos",
       "Que se borran datos para ganar espacio",
       "Que se reduce la cantidad de usuarios"
     ],
-    correct: 0
+    correct: 1
   },
   {
     unit: "Unidad 07 · Bases de Datos NoSQL",
     q: "¿En qué caso suele convenir más usar una base de datos NoSQL?",
     options: [
-      "Cuando se manejan grandes volúmenes de datos con necesidad de alta escalabilidad",
       "Cuando los datos nunca van a crecer",
       "Cuando se necesita una única tabla pequeña",
-      "Cuando no se necesita guardar ningún dato"
+      "Cuando no se necesita guardar ningún dato",
+      "Cuando se manejan grandes volúmenes de datos con necesidad de alta escalabilidad"
     ],
-    correct: 0
+    correct: 3
   },
 
   // Unidad 08: Administración de Base de Datos
@@ -421,34 +421,34 @@ const QUESTIONS = [
     unit: "Unidad 08 · Administración de BD",
     q: "¿Por qué es importante asignar roles y privilegios a los usuarios de una base de datos?",
     options: [
-      "Para controlar qué acciones puede hacer cada usuario y proteger la seguridad de los datos",
       "Para que todos tengan acceso total sin restricciones",
+      "Para controlar qué acciones puede hacer cada usuario y proteger la seguridad de los datos",
       "Para que la base de datos sea más pequeña",
       "Para acelerar las consultas automáticamente"
     ],
-    correct: 0
+    correct: 1
   },
   {
     unit: "Unidad 08 · Administración de BD",
     q: "¿Para qué sirven las copias de seguridad de una base de datos?",
     options: [
-      "Para poder recuperar la información en caso de fallas o pérdida de datos",
       "Para hacer las consultas más rápidas",
       "Para eliminar usuarios duplicados",
-      "Para reemplazar la necesidad de definir permisos"
+      "Para reemplazar la necesidad de definir permisos",
+      "Para poder recuperar la información en caso de fallas o pérdida de datos"
     ],
-    correct: 0
+    correct: 3
   },
   {
     unit: "Unidad 08 · Administración de BD",
     q: "Al planificar una base de datos, ¿qué se evalúa en la etapa de 'evaluación de hardware'?",
     options: [
-      "Los recursos necesarios (procesamiento, memoria, almacenamiento) para soportar la base de datos",
       "El color del servidor",
+      "Los recursos necesarios (procesamiento, memoria, almacenamiento) para soportar la base de datos",
       "El lenguaje de programación de la interfaz gráfica",
       "La cantidad de preguntas del test"
     ],
-    correct: 0
+    correct: 1
   }
 ];
 
